@@ -1,75 +1,65 @@
 #include <stdio.h>
-#include <stdlib.h>
+#define MAX 5
 
-#define MAX 3
-int rear = -1;
-int front = -1;
+int queue[MAX];
+int front = -1, rear = -1;
 
-void enQueue(int q[], int item) {
+// Function to add element to the queue
+void enqueue(int value) {
     if (rear == MAX - 1) {
-        printf("The queue is full\n");
-        return;
-    }
-    rear++;
-    q[rear] = item;
-    if (front == -1) {
-        front = 0;
-    }
-}
-
-void deQueue(int q[]) {
-    if (front == -1 || front > rear) {
-        printf("The queue is empty\n");
-        return;
-    }
-    printf("The element deleted is %d\n", q[front]);
-    front++;
-}
-
-void display(int q[]) {
-    printf("\n");
-    if (rear == -1 || front > rear) {
-        printf("queue is Empty\n");
+        printf("Queue Overflow! Cannot insert %d\n", value);
     } else {
-        printf("The queue is : ");
+        if (front == -1)
+            front = 0;
+        rear++;
+        queue[rear] = value;
+        printf("Enqueued: %d\n", value);
+    }
+}
+
+// Function to remove element from the queue
+void dequeue() {
+    if (front == -1 || front > rear) {
+        printf("Queue Underflow! Cannot dequeue\n");
+    } else {
+        printf("Dequeued: %d\n", queue[front]);
+        front++;
+    }
+}
+
+// Function to display the queue
+void display() {
+    if (front == -1 || front > rear) {
+        printf("Queue is empty\n");
+    } else {
+        printf("Queue elements: ");
         for (int i = front; i <= rear; i++) {
-            printf("%d ", q[i]);
+            printf("%d ", queue[i]);
         }
         printf("\n");
     }
 }
 
+// Main function
 int main() {
-    int queue[MAX], n;
-    while (1) {
-        printf("Enter the operation required\n");
-        printf("=====================================\n");
-        printf("1. enqueue\n2. dequeue\n3. Display\n4. exit\n");
-        printf("=====================================\n");
-        fflush(stdin);
-        scanf("%d", &n);
-        switch (n) {
-            case 1: {
-                printf("Enter the item to push : ");
-                int item;
-                scanf("%d", &item);
-                enQueue(queue, item);
-                display(queue);
-                break;
-            }
-            case 2:
-                deQueue(queue);
-                display(queue);
-                break;
-            case 3:
-                display(queue);
-                break;
-            case 4:
-                printf("\n=======Program terminated=======\n");
-                exit(0);
-            default:
-                printf("Invalid selection\n");
-        }
-    }
+    enqueue(10);
+    enqueue(20);
+    enqueue(30);
+    display();
+    
+    dequeue();
+    display();
+    
+    enqueue(40);
+    enqueue(50);
+    enqueue(60); // This will show overflow if MAX is 5
+    display();
+
+    dequeue();
+    dequeue();
+    dequeue();
+    dequeue(); // This will show underflow
+    display();
+
     return 0;
 }
