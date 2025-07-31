@@ -4,7 +4,6 @@
 int queue[MAX];
 int front = -1, rear = -1;
 
-// Function to add element to the queue
 void enqueue(int value) {
     if (rear == MAX - 1) {
         printf("Queue Overflow! Cannot insert %d\n", value);
@@ -17,7 +16,6 @@ void enqueue(int value) {
     }
 }
 
-// Function to remove element from the queue
 void dequeue() {
     if (front == -1 || front > rear) {
         printf("Queue Underflow! Cannot dequeue\n");
@@ -27,7 +25,6 @@ void dequeue() {
     }
 }
 
-// Function to display the queue
 void display() {
     if (front == -1 || front > rear) {
         printf("Queue is empty\n");
@@ -40,26 +37,35 @@ void display() {
     }
 }
 
-// Main function
 int main() {
-    enqueue(10);
-    enqueue(20);
-    enqueue(30);
-    display();
-    
-    dequeue();
-    display();
-    
-    enqueue(40);
-    enqueue(50);
-    enqueue(60); // This will show overflow if MAX is 5
-    display();
+    int choice, value;
+    while (1) {
+        printf("\n--- Queue Menu ---\n");
+        printf("1. Enqueue\n");
+        printf("2. Dequeue\n");
+        printf("3. Display\n");
+        printf("4. Exit\n");
+        printf("Enter your choice (1-4): ");
+        scanf("%d", &choice);
 
-    dequeue();
-    dequeue();
-    dequeue();
-    dequeue(); // This will show underflow
-    display();
-
+        switch (choice) {
+            case 1:
+                printf("Enter value to enqueue: ");
+                scanf("%d", &value);
+                enqueue(value);
+                break;
+            case 2:
+                dequeue();
+                break;
+            case 3:
+                display();
+                break;
+            case 4:
+                printf("Exiting program.\n");
+                return 0;
+            default:
+                printf("Invalid choice! Please enter a number between 1 and 4.\n");
+        }
+    }
     return 0;
 }
