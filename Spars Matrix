@@ -1,111 +1,54 @@
 #include <stdio.h>
 
-#define MAX 100
+#define MAX 10
 
-typedef struct {
-    int row;
-    int col;
-    int val;
-} Term;
-
-void readSparseMatrix(Term mat[], int *rows, int *cols, int *numTerms) {
-    printf("Enter number of rows, columns and non-zero elements: ");
-    scanf("%d %d %d", rows, cols, numTerms);
-
-    printf("Enter the elements (row column value):\n");
-    for (int i = 1; i <= *numTerms; i++) {
-        scanf("%d %d %d", &mat[i].row, &mat[i].col, &mat[i].val);
-    }
-
-    mat[0].row = *rows;
-    mat[0].col = *cols;
-    mat[0].val = *numTerms;
+void readMatrix(int mat[MAX][MAX], int rows, int cols) {
+    printf("Enter elements (use 0 for sparse positions):\n");
+    for (int i = 0; i < rows; i++)
+        for (int j = 0; j < cols; j++)
+            scanf("%d", &mat[i][j]);
 }
 
-void displaySparseMatrix(Term mat[]) {
-    printf("\nRow\tCol\tValue\n");
-    for (int i = 0; i <= mat[0].val; i++) {
-        printf("%d\t%d\t%d\n", mat[i].row, mat[i].col, mat[i].val);
+void displayMatrix(int mat[MAX][MAX], int rows, int cols) {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++)
+            printf("%d ", mat[i][j]);
+        printf("\n");
     }
 }
 
-void addSparseMatrices(Term a[], Term b[], Term sum[]) {
-    if (a[0].row != b[0].row || a[0].col != b[0].col) {
-        printf("Matrix addition not possible.\n");
-        return;
-    }
-
-    int i = 1, j = 1, k = 1;
-    while (i <= a[0].val && j <= b[0].val) {
-        if (a[i].row < b[j].row || (a[i].row == b[j].row && a[i].col < b[j].col)) {
-            sum[k++] = a[i++];
-        } else if (a[i].row > b[j].row || (a[i].row == b[j].row && a[i].col > b[j].col)) {
-            sum[k++] = b[j++];
-        } else {
-            sum[k] = a[i];
-            sum[k].val = a[i].val + b[j].val;
-            k++;
-            i++;
-            j++;
-        }
-    }
-
-    while (i <= a[0].val) {
-        sum[k++] = a[i++];
-    }
-
-    while (j <= b[0].val) {
-        sum[k++] = b[j++];
-    }
-
-    sum[0].row = a[0].row;
-    sum[0].col = a[0].col;
-    sum[0].val = k - 1;
+void addMatrices(int a[MAX][MAX], int b[MAX][MAX], int sum[MAX][MAX], int rows, int cols) {
+    for (int i = 0; i < rows; i++)
+        for (int j = 0; j < cols; j++)
+            sum[i][j] = a[i][j] + b[i][j];
 }
 
-void transposeSparseMatrix(Term input[], Term trans[]) {
-    int k = 1;
-    trans[0].row = input[0].col;
-    trans[0].col = input[0].row;
-    trans[0].val = input[0].val;
-
-    for (int col = 0; col < input[0].col; col++) {
-        for (int i = 1; i <= input[0].val; i++) {
-            if (input[i].col == col) {
-                trans[k].row = input[i].col;
-                trans[k].col = input[i].row;
-                trans[k].val = input[i].val;
-                k++;
-            }
-        }
-    }
+void transposeMatrix(int mat[MAX][MAX], int trans[MAX][MAX], int rows, int cols) {
+    for (int i = 0; i < rows; i++)
+        for (int j = 0; j < cols; j++)
+            trans[j][i] = mat[i][j];
 }
 
 int main() {
-    Term A[MAX], B[MAX], SUM[MAX], TRANS[MAX];
-    int r1, c1, n1, r2, c2, n2;
+    int rows, cols;
+    int mat1[MAX][MAX], mat2[MAX][MAX], sum[MAX][MAX], transpose[MAX][MAX];
 
-    printf("Matrix A:\n");
-    readSparseMatrix(A, &r1, &c1, &n1);
+    printf("Enter number of rows and columns: ");
+    scanf("%d%d", &rows, &cols);
 
-    printf("Matrix B:\n");
-    readSparseMatrix(B, &r2, &c2, &n2);
+    printf("\nEnter first sparse matrix:\n");
+    readMatrix(mat1, rows, cols);
 
-    if (r1 != r2 || c1 != c2) {
-        printf("Matrix addition not possible due to dimension mismatch.\n");
-        return 0;
-    }
+    printf("\nEnter second sparse matrix:\n");
+    readMatrix(mat2, rows, cols);
 
-    addSparseMatrices(A, B, SUM);
+    addMatrices(mat1, mat2, sum, rows, cols);
+    printf("\nSum of the matrices:\n");
+    displayMatrix(sum, rows, cols);
 
-    printf("\nSum Matrix:\n");
-    displaySparseMatrix(SUM);
-
-    transposeSparseMatrix(SUM, TRANS);
-
-    printf("\nTranspose of Sum Matrix:\n");
-    displaySparseMatrix(TRANS);
+    transposeMatrix(sum, transpose, rows, cols);
+    printf("\nTranspose of the resulting matrix:\n");
+    displayMatrix(transpose, cols, rows);
 
     return 0;
 }
-
