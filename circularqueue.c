@@ -6,11 +6,13 @@ int max_size;
 void enqueue(int value) {
 if ((rear + 1) % max_size == front) {
 printf("Queue is Full!\n");
-} else if (front == -1) {
+} 
+else if (front == -1) {
 front = rear = 0;
 queue[rear] = value;
 printf("Enqueued: %d\n", value);
-} else {
+} 
+else {
 rear = (rear + 1) % max_size;
 queue[rear] = value;
 printf("Enqueued: %d\n", value);
@@ -19,13 +21,15 @@ printf("Enqueued: %d\n", value);
 void dequeue() {
 if (front == -1) {
 printf("Queue is Empty!\n");
-} else {
+} 
+else {
 int value = queue[front];
 printf("Dequeued: %d\n", value);
 if (front == rear) {
 // Queue becomes empty
 front = rear = -1;
-} else {
+} 
+else {
 front = (front + 1) % max_size;
 }
 }
